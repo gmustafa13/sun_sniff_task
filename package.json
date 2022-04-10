@@ -1,0 +1,19 @@
+{
+  "name": "sun_sniff_task",
+  "version": "1.0.0",
+  "description": "geolocation task",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "gmustafa.mansoori@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.5.0",
+    "mongoose": "^6.2.10",
+    "nodemon": "^2.0.15"
+  }
+}
