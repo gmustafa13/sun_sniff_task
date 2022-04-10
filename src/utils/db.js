@@ -1,8 +1,15 @@
 const mongoose = require('mongoose')
-
-mongoose.connect('mongodb://localhost:27017/sun_sniff',(err,connet)=>{
-if(err){
-    console.log('error while connecting db');
+const dbConnect = async()=>{
+    try {    
+        let connected =  await mongoose.connect(process.env.MONGO_URL)
+        if(connected){
+            console.log('mongodb connected')
+            return true
+        }
+    } catch (error) {
+        console.log(`error while connecting mongodb`);
+        return false
+    }
 }
-console.log('mongodb connected');
-})
+
+module.exports = {dbConnect}
