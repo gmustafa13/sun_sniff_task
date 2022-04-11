@@ -59,7 +59,7 @@ const arrayToJson = async () => {
     //sclice header
     const headers = arr[0].split('\t');
     console.log("header created");
-
+    arr.splice(0, 1)
     /**
      * 1. loop over arr from index 1
      * 2. while looping sepret by tab 
@@ -70,51 +70,36 @@ const arrayToJson = async () => {
      * 7. final_array will contain array of object witch will be push in db
      * 
      */
-    const final_array = []
-    for (let i = 1; i < arr.length; i++) {
-        // accesing line by line
-        const element = arr[i];
-        // accesing values
-        const lineData = element.split('\t');
-        let obj = {
-            location: {
-                type: 'Point',
-                coordinates: []
-            }
-        }
-        for (let j = 0; j < lineData.length; j++) {
-            const value = lineData[j];
 
-            if (headers[j] === 'long') {
-                obj.location.coordinates[0] = Number(value)
-            } else if (headers[j] === 'lat') {
-                obj.location.coordinates[1] = Number(value)
-            }
-
-            // if (headers[j] === 'population') {
-            //     obj[headers[j]] = Number(value)
-            // }
-            // if (headers[j] === 'modified_at') {
-            //     obj[headers[j]] = new Date(value)
-            // }
-
-            obj[headers[j]] = value
-            delete obj.lat;
-            delete obj.long;
-            final_array.push(obj)
-
-        }
-
-    }
-    console.log("final arr");
+    let final_array = []
+    arr.forEach(async (element) => {
+        const data = element.split('\t');
+        let temp = await rowToObject(data, headers);
+        final_array.push(temp)
+    });
     return final_array
 
+}
+const rowToObject = async (data, headers) => {
+    let objData = await headers.reduce((obj, nextKey, index) => {
+        obj.location = {
+            type: 'Point',
+            coordinates: []
+        }
+        obj[nextKey] = data[index];
+        obj.location.coordinates[0] = obj.long ? Number(obj.long) : 0
+        obj.location.coordinates[1] = obj.lat ? Number(obj.lat) : 0
+        return obj;
+    }, {});
+    delete objData.lat
+    delete objData.long
+    return objData
 }
 
 const saveLocationInDb = async () => {
     try {
         const data = await arrayToJson()
-        console.log("inser start");
+        console.log("inser start", data.length);
         const insertedData = await locationModel.insertMany(data);
         console.log("insert end");
         if (insertedData) {

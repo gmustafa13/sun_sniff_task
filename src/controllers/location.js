@@ -8,7 +8,7 @@ const getData = async (query) => {
     const { q, latitude, longitude, radius, sort } = query;
     let filterObj = {}
     let sortObj = {}
-    const sortParams =['name','distance']
+    const sortParams = ['name', 'distance']
     if (q) {
         filterObj['name'] = {
             $regex: q, $options: "i"
@@ -18,7 +18,7 @@ const getData = async (query) => {
      * if lat and long is there then filter accordingly
      * if not it will filter based on q if its provided
      */
-    if ((latitude && longitude)  || (latitude && longitude && radius) ) {
+    if ((latitude && longitude) || (latitude && longitude && radius)) {
         filterObj['location'] = {
             $near: {
                 $geometry: {
@@ -28,7 +28,7 @@ const getData = async (query) => {
                         Number(latitude)
                     ]
                 },
-                $maxDistance: radius ? Number(radius) : 4,
+                $maxDistance: radius ? Number(radius * 1000) : 4,
                 $minDistance: 0
             }
         }
@@ -38,17 +38,17 @@ const getData = async (query) => {
      * if sort parametere provide it will query on that
      * if not default sort on name will implement
      */
-    if(sortParams.includes(sort)){
-        sortObj[sort]  = -1
-    }else{
+    if (sortParams.includes(sort)) {
+        sortObj[sort] = -1
+    } else {
         sortObj.name = -1
     }
-   return await locationServices.getData(filterObj,sortObj)
+    return await locationServices.getData(filterObj, sortObj)
 
 }
 
-const getDataWithPagination = async(query)=>{
-    const { q, latitude, longitude, radius, sort ,pageNumber ,pageSize } = query;
+const getDataWithPagination = async (query) => {
+    const { q, latitude, longitude, radius, sort, pageNumber, pageSize } = query;
 
     let filterObj = {}
     let sortObj = {}
@@ -57,9 +57,9 @@ const getDataWithPagination = async(query)=>{
     let paginationObj = {
         page,
         limit,
-        offset: (page -1) * limit
+        offset: (page - 1) * limit
     }
-    const sortParams =['name','distance']
+    const sortParams = ['name', 'distance']
     if (q) {
         filterObj['name'] = {
             $regex: q, $options: "i"
@@ -69,7 +69,7 @@ const getDataWithPagination = async(query)=>{
      * if lat and long is there then filter accordingly
      * if not it will filter based on q if its provided
      */
-    if ((latitude && longitude)  || (latitude && longitude && radius) ) {
+    if ((latitude && longitude) || (latitude && longitude && radius)) {
         filterObj['location'] = {
             $near: {
                 $geometry: {
@@ -79,7 +79,7 @@ const getDataWithPagination = async(query)=>{
                         Number(latitude)
                     ]
                 },
-                $maxDistance: radius ? Number(radius) : 4,
+                $maxDistance: radius ? Number(radius * 1000) : 4,
                 $minDistance: 0
             }
         }
@@ -89,12 +89,12 @@ const getDataWithPagination = async(query)=>{
      * if sort parametere provide it will query on that
      * if not default sort on name will implement
      */
-    if(sortParams.includes(sort)){
-        sortObj[sort]  = -1
-    }else{
+    if (sortParams.includes(sort)) {
+        sortObj[sort] = -1
+    } else {
         sortObj.name = -1
     }
-   return await locationServices.getDataWithPagination(filterObj, sortObj, paginationObj)
+    return await locationServices.getDataWithPagination(filterObj, sortObj, paginationObj)
 }
 
 
@@ -103,3 +103,5 @@ module.exports = {
     getData,
     getDataWithPagination
 }
+
+
