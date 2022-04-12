@@ -26,5 +26,13 @@ module.exports = {
             .withMessage('password must be between 1 and 20'),
 
 
+    ],
+    loginValidation:()=>[
+        body('email', 'email is required').exists().trim()
+        .isLength({ min: 1, max: 40 })
+        .withMessage('email must be between 1 and 40'),
+    body('password', 'password is required').exists().trim()
+        .isLength({ min: 1, max: 20 })
+        .withMessage('password must be between 1 and 20'),
     ]
 }

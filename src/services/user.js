@@ -7,8 +7,15 @@ const create = async(userInfo)=>{
        return error
    }
 }
-
+const getOne = async(filter)=>{
+    try {
+      return await  userModel.findOne(filter)
+    } catch (error) {
+       return error 
+    }
+}
 
 module.exports ={
-    create
+    create,
+    getOne
 }
